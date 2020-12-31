@@ -12,10 +12,10 @@
 #>
 
 param (
-	[string]$OutDir = "",
+	[string]$OutDir = "C:\Users\christoph\compiled\remotely",
     # RIDs are described here: https://docs.microsoft.com/en-us/dotnet/core/rid-catalog
-	[string]$RID = "",
-	[string]$Hostname = "",
+	[string]$RID = "win10-x64",
+	[string]$Hostname = "https://hilfe.eifel.cloud",
 	[string]$CertificatePath = "",
     [string]$CertificatePassword = "",
     [string]$CurrentVersion = ""
@@ -116,22 +116,25 @@ if ((Test-Path -Path "$Root\Agent\bin\Release\net5.0\linux-x64\publish") -eq $tr
 	Get-ChildItem -Path "$Root\Agent\bin\Release\net5.0\linux-x64\publish" | Remove-Item -Force -Recurse
 }
 
+# Clean first
+dotnet clean
+
 
 # Publish Core clients.
 dotnet publish /p:Version=$CurrentVersion /p:FileVersion=$CurrentVersion --runtime win10-x64 --configuration Release --output "$Root\Agent\bin\Release\net5.0\win10-x64\publish" "$Root\Agent"
-dotnet publish /p:Version=$CurrentVersion /p:FileVersion=$CurrentVersion --runtime linux-x64 --configuration Release --output "$Root\Agent\bin\Release\net5.0\linux-x64\publish" "$Root\Agent"
+#//dotnet publish /p:Version=$CurrentVersion /p:FileVersion=$CurrentVersion --runtime linux-x64 --configuration Release --output "$Root\Agent\bin\Release\net5.0\linux-x64\publish" "$Root\Agent"
 dotnet publish /p:Version=$CurrentVersion /p:FileVersion=$CurrentVersion --runtime win10-x86 --configuration Release --output "$Root\Agent\bin\Release\net5.0\win10-x86\publish" "$Root\Agent"
 
 New-Item -Path "$Root\Agent\bin\Release\net5.0\win10-x64\publish\Desktop\" -ItemType Directory -Force
 New-Item -Path "$Root\Agent\bin\Release\net5.0\win10-x86\publish\Desktop\" -ItemType Directory -Force
-New-Item -Path "$Root\Agent\bin\Release\net5.0\linux-x64\publish\Desktop\" -ItemType Directory -Force
+#//New-Item -Path "$Root\Agent\bin\Release\net5.0\linux-x64\publish\Desktop\" -ItemType Directory -Force
 
 
 # Publish Linux ScreenCaster
-dotnet publish /p:Version=$CurrentVersion /p:FileVersion=$CurrentVersion -p:PublishProfile=packaged-linux-x64 --configuration Release "$Root\Desktop.Linux\"
+#//dotnet publish /p:Version=$CurrentVersion /p:FileVersion=$CurrentVersion -p:PublishProfile=packaged-linux-x64 --configuration Release "$Root\Desktop.Linux\"
 
 # Publish Linux GUI App
-dotnet publish /p:Version=$CurrentVersion /p:FileVersion=$CurrentVersion -p:PublishProfile=desktop-linux-x64 --configuration Release "$Root\Desktop.Linux\"
+#//dotnet publish /p:Version=$CurrentVersion /p:FileVersion=$CurrentVersion -p:PublishProfile=desktop-linux-x64 --configuration Release "$Root\Desktop.Linux\"
 
 
 # Publish Windows ScreenCaster (32-bit)
@@ -152,10 +155,10 @@ Get-ChildItem -Path "$Root\Desktop.Win\bin\Release\win-x64\publish\" | ForEach-O
 
 &"$MSBuildPath" "$Root\Desktop.Win.Wrapper" /t:Build /p:Configuration=Release /p:Platform=x64 /p:Version=$CurrentVersion /p:FileVersion=$CurrentVersion
 if ($SignAssemblies) {
-    &"$Root\Utilities\signtool.exe" sign /f "$CertificatePath" /p $CertificatePassword /t http://timestamp.digicert.com "$Root\Desktop.Win.Wrapper\bin\x64\Release\Remotely_Desktop.exe"
+    &"$Root\Utilities\signtool.exe" sign /f "$CertificatePath" /p $CertificatePassword /t http://timestamp.digicert.com "$Root\Desktop.Win.Wrapper\bin\x64\Release\Stoltz-IT_Fernwartung.exe"
 }
 [System.IO.Directory]::CreateDirectory("$Root\Server\wwwroot\Downloads\Win-x64")
-Copy-Item -Path "$Root\Desktop.Win.Wrapper\bin\x64\Release\Remotely_Desktop.exe" -Destination "$Root\Server\wwwroot\Downloads\Win-x64\Remotely_Desktop.exe" -Force
+Copy-Item -Path "$Root\Desktop.Win.Wrapper\bin\x64\Release\Stoltz-IT_Fernwartung.exe" -Destination "$Root\Server\wwwroot\Downloads\Win-x64\Stoltz-IT_Fernwartung.exe" -Force
 
 
 # Publish Windows GUI App (32-bit)
@@ -169,10 +172,10 @@ Get-ChildItem -Path "$Root\Desktop.Win\bin\Release\win-x86\publish\" | ForEach-O
 
 &"$MSBuildPath" "$Root\Desktop.Win.Wrapper" /t:Build /p:Configuration=Release /p:Platform=x86 /p:Version=$CurrentVersion /p:FileVersion=$CurrentVersion
 if ($SignAssemblies) {
-    &"$Root\Utilities\signtool.exe" sign /f "$CertificatePath" /p $CertificatePassword /t http://timestamp.digicert.com "$Root\Desktop.Win.Wrapper\bin\x86\Release\Remotely_Desktop.exe"
+    &"$Root\Utilities\signtool.exe" sign /f "$CertificatePath" /p $CertificatePassword /t http://timestamp.digicert.com "$Root\Desktop.Win.Wrapper\bin\x86\Release\Stoltz-IT_Fernwartung.exe"
 }
 [System.IO.Directory]::CreateDirectory("$Root\Server\wwwroot\Downloads\Win-x86")
-Copy-Item -Path "$Root\Desktop.Win.Wrapper\bin\x86\Release\Remotely_Desktop.exe" -Destination "$Root\Server\wwwroot\Downloads\Win-x86\Remotely_Desktop.exe" -Force
+Copy-Item -Path "$Root\Desktop.Win.Wrapper\bin\x86\Release\Stoltz-IT_Fernwartung.exe" -Destination "$Root\Server\wwwroot\Downloads\Win-x86\Stoltz-IT_Fernwartung.exe" -Force
 
 
 # Build installer.
@@ -198,12 +201,12 @@ while ((Test-Path -Path "$PublishDir\Remotely-Win10-x86.zip") -eq $false){
 }
 Move-Item -Path "$PublishDir\Remotely-Win10-x86.zip" -Destination "$Root\Server\wwwroot\Downloads\Remotely-Win10-x86.zip" -Force
 
-$PublishDir =  "$Root\Agent\bin\Release\net5.0\linux-x64\publish"
-Compress-Archive -Path "$PublishDir\*" -DestinationPath "$PublishDir\Remotely-Linux.zip" -CompressionLevel Optimal -Force
-while ((Test-Path -Path "$PublishDir\Remotely-Linux.zip") -eq $false){
-    Start-Sleep -Seconds 1
-}
-Move-Item -Path "$PublishDir\Remotely-Linux.zip" -Destination "$Root\Server\wwwroot\Downloads\Remotely-Linux.zip" -Force
+#//$PublishDir =  "$Root\Agent\bin\Release\net5.0\linux-x64\publish"
+#//Compress-Archive -Path "$PublishDir\*" -DestinationPath "$PublishDir\Remotely-Linux.zip" -CompressionLevel Optimal -Force
+#//while ((Test-Path -Path "$PublishDir\Remotely-Linux.zip") -eq $false){
+#//    Start-Sleep -Seconds 1
+#//}
+#//Move-Item -Path "$PublishDir\Remotely-Linux.zip" -Destination "$Root\Server\wwwroot\Downloads\Remotely-Linux.zip" -Force
 
 
 
