@@ -1,5 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
@@ -18,21 +17,21 @@
     <PackageProjectUrl>https://remotely.one</PackageProjectUrl>
     <Platforms>AnyCPU;x86;x64</Platforms>
     <StartupObject>Remotely.Desktop.Win.Program</StartupObject>
+    <FileUpgradeFlags>40</FileUpgradeFlags>
+    <UpgradeBackupLocation>C:\Users\christoph\source\repos\remotely\Backup\Desktop.Win\</UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+	<SatelliteResourceLanguages>de</SatelliteResourceLanguages>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove="Assets\favicon.ico" />
     <None Remove="Assets\Remotely_Icon.png" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.MixedReality.WebRTC" Version="2.0.2" />
     <PackageReference Include="NAudio" Version="1.10.0" />
@@ -41,24 +40,20 @@
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="System.Drawing.Common" Version="5.0.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Desktop.Core\Desktop.Core.csproj" />
     <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Resource Include="Assets\favicon.ico" />
     <Resource Include="Assets\Remotely_Icon.png" />
   </ItemGroup>
-
   <ItemGroup>
     <ApplicationDefinition Update="App.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
   </ItemGroup>
-
   <ItemGroup>
     <Compile Update="App.xaml.cs">
       <SubType>Code</SubType>
@@ -72,7 +67,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
-
   <ItemGroup>
     <Page Update="Controls\HostNamePrompt.xaml">
       <SubType>Designer</SubType>
@@ -81,9 +75,7 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="if $(SolutionDir) == *Undefined* (&#xD;&#xA;  exit 0&#xD;&#xA;)&#xD;&#xA;if $(ConfigurationName) == Debug (&#xD;&#xA;  if $(PlatformName) == Any CPU (&#xD;&#xA;      md &quot;$(SolutionDir)Agent\bin\Debug\net5.0\Desktop\&quot;&#xD;&#xA;      xcopy &quot;$(TargetDir)*&quot; &quot;$(SolutionDir)Agent\bin\Debug\net5.0\Desktop\&quot; /y /e /i&#xD;&#xA;  )&#xD;&#xA;  if $(PlatformName) == x64 (&#xD;&#xA;      md &quot;$(SolutionDir)Agent\bin\x64\Debug\net5.0\Desktop\&quot;&#xD;&#xA;      xcopy &quot;$(TargetDir)*&quot; &quot;$(SolutionDir)Agent\bin\x64\Debug\net5.0\Desktop\&quot; /y /e /i&#xD;&#xA;  )&#xD;&#xA;  if $(PlatformName) == x86 (&#xD;&#xA;      md &quot;$(SolutionDir)Agent\bin\x86\Debug\net5.0\Desktop\&quot;&#xD;&#xA;      xcopy &quot;$(TargetDir)*&quot; &quot;$(SolutionDir)Agent\bin\x86\Debug\net5.0\Desktop\&quot; /y /e /i&#xD;&#xA;  )&#xD;&#xA;)" />
   </Target>
-
 </Project>
