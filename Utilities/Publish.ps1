@@ -175,7 +175,7 @@ if ($SignAssemblies) {
     &"$Root\Utilities\signtool.exe" sign /f "$CertificatePath" /p $CertificatePassword /t http://timestamp.digicert.com "$Root\Desktop.Win.Wrapper\bin\x86\Release\Stoltz-IT_Fernwartung.exe"
 }
 [System.IO.Directory]::CreateDirectory("$Root\Server\wwwroot\Downloads\Win-x86")
-Copy-Item -Path "$Root\Desktop.Win.Wrapper\bin\x86\Release\Remotely_Desktop.exe" -Destination "$Root\Server\wwwroot\Downloads\Win-x86\Stoltz-IT_Fernwartung.exe" -Force
+Copy-Item -Path "$Root\Desktop.Win.Wrapper\bin\x86\Release\Remotely_Desktop.exe" -Destination "$Root\Server\wwwroot\Downloads\Win-x86\Fernwartung.exe" -Force
 
 
 # Build installer.
