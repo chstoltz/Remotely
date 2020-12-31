@@ -38,7 +38,7 @@
                 <DockPanel>
                     <Image Height="50" Width="50" Source="/Assets/Remotely_Icon.png" Margin="0,0,10,0"></Image>
                     <TextBlock Foreground="#FF1D90F1" FontWeight="Bold" FontSize="20" VerticalAlignment="Center">
-                            Remote Control Request
+                            Fernwartungssitzung Anfrage
                     </TextBlock>
                 </DockPanel>
 
@@ -49,15 +49,15 @@
 
         <StackPanel Grid.Row="1">
             <TextBlock Style="{StaticResource SectionHeader}" FontWeight="Bold" FontSize="18" Foreground="DimGray" Margin="10" TextWrapping="Wrap">
-                A remote control session has been requested.
+                Eine Fernwartung wurde angefragt.
             </TextBlock>
 
             <TextBlock Style="{StaticResource SectionHeader}" FontWeight="Bold" FontSize="18" Foreground="DimGray" Margin="10" TextWrapping="Wrap">
-                <Run>Would you like to allow </Run>
+                <Run>Möchten Sie </Run>
                 <Run Text="{Binding RequesterName}"></Run>
-                <Run> from </Run>
+                <Run> von </Run>
                 <Run Text="{Binding OrganizationName}"></Run>
-                <Run> to control your computer?</Run>
+                <Run> Zugriff auf Ihren Computer gewähren?</Run>
             </TextBlock>
         </StackPanel>
       
